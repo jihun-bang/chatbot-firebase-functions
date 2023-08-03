@@ -9,7 +9,10 @@ import {FirestoreChatMessageHistory} from "langchain/stores/message/firestore";
 import {ChatOpenAI} from "langchain/chat_models/openai";
 import {ConversationChain} from "langchain/chains";
 import cors from "cors";
+import dotenv from "dotenv"
 
+
+dotenv.config();
 admin.initializeApp({
     credential: admin.credential.cert(serviceAccount as ServiceAccount),
 });
@@ -27,6 +30,7 @@ const memory = new BufferMemory({
         },
     }),
 });
+functions.logger.info(`${process.env.OPENAI_API_KEY}`, {structuredData: true});
 const model = new ChatOpenAI({
     openAIApiKey: process.env.OPENAI_API_KEY,
 });
@@ -42,7 +46,7 @@ exports.helloWorld = onRequest({region: "asia-northeast3"},
 exports.chatbot = onRequest({region: "asia-northeast3"},
     async (req: Request, res: Response) => {
         corsHandler(req, res, async () => {
-            functions.logger.info("[chatbot]", {structuredData: true});
+            functions.logger.info(`[chatbot] ${req.query}`, {structuredData: true});
             const data = req.query;
             const res1 = await chain.call({input: data["question"]});
             res.send(res1);
