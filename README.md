@@ -1,3 +1,3 @@
-# skmagic-chatbot-server
+# Chatbot Firebase Functions
 
 Firebase-langchain-node.js
